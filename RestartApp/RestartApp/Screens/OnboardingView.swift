@@ -9,6 +9,11 @@ import SwiftUI
 
 struct OnboardingView: View {
     @AppStorage("onboarding") var isOnboardingActive: Bool = false
+    @State private var buttonWidth: Double = UIScreen.main.bounds.width - 80
+    @State private var buttonOffset: CGFloat = 0
+    @State private var dynamicButtonWidth: CGFloat = 80
+    @State private var isAnimating: Bool = false
+    
     var body: some View {
         ZStack {
             Color("ColorBlue").ignoresSafeArea(.all, edges: .all)
@@ -18,17 +23,18 @@ struct OnboardingView: View {
                 VStack (spacing: 0){
                     Text("Share").font(.system(size: 60)).fontWeight(.heavy).foregroundColor(.white)
                     Text("It's not how much we give but about how much love we put into giving").font(.title3).fontWeight(.light).foregroundColor(.white).multilineTextAlignment(.center).padding(.horizontal)
-                }
+                }.opacity(isAnimating ? 1 : 0)
+                 .offset(x: isAnimating ? 0 : -40)
+                 .animation(.easeOut(duration: 1.0), value: isAnimating)
                 Spacer()
                 //Center
                 ZStack{
-                    ZStack{
-                        Circle().stroke(.white.opacity(0.2), lineWidth: 40 ).frame(width: 260, height: 260, alignment: .center)
-                        Circle().stroke(.white.opacity(0.2), lineWidth: 80).frame(width: 260, height: 260, alignment: .center)
-                    }
+                    CircleGroupView(shapeColor: .white, shapeOpacity: 0.2)
                     Image("character-1")
                     .resizable()
                     .scaledToFit()
+                    .opacity(isAnimating ? 1 : 0)
+                    .animation(.easeOut(duration: 0.5), value: isAnimating)
                 }
                 Spacer()
                 ZStack{
@@ -48,7 +54,7 @@ struct OnboardingView: View {
                     HStack{
                         Capsule()
                             .fill(Color("ColorRed"))
-                            .frame(width: 80)
+                            .frame(width: dynamicButtonWidth)
                         Spacer()
 
                     }
@@ -65,17 +71,40 @@ struct OnboardingView: View {
                             
                         }.foregroundColor(.white)
                         .frame(width: 80, height: 80, alignment: .center)
-                        .onTapGesture {
-                            isOnboardingActive = false
-                        }
+                        .offset(x: buttonOffset)
+                        .gesture(
+                            DragGesture()
+                                .onChanged({ gesture in
+                                    if gesture.translation.width > 0 && buttonOffset <= buttonWidth - 80 {
+                                        buttonOffset = gesture.translation.width
+                                        dynamicButtonWidth = 80 + gesture.translation.width
+                                        
+                                    }
+                                }).onEnded({ _ in
+                                    withAnimation(Animation.easeOut(duration: 0.5)){
+                                        if buttonOffset > buttonWidth / 2{
+                                            isOnboardingActive = false
+                                        }else{
+                                            buttonOffset = 0
+                                            dynamicButtonWidth = 80
+                                        }
+                                    }
+                                })
+                        )
                         Spacer()
                     }
-                }.frame(height: 80, alignment: .center)
+                }.frame(width: buttonWidth, height: 80, alignment: .center)
                     .padding()
+                    .opacity(isAnimating ? 1 : 0)
+                    .offset(y: isAnimating ? 0 : 40)
+                    .animation(.easeOut(duration: 0.5), value: isAnimating)
+                    
                 //Footer
                 Spacer()
 
             }
+        }.onAppear {
+            isAnimating = true
         }//End of ZStack
     }
 }
