@@ -15,6 +15,7 @@
 		0314441529F9AAEA0092FE85 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0314441429F9AAEA0092FE85 /* OnboardingView.swift */; };
 		0314441729F9AB050092FE85 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0314441629F9AB050092FE85 /* HomeView.swift */; };
 		031FBD7629F9F96300B92181 /* CircleGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031FBD7529F9F96300B92181 /* CircleGroupView.swift */; };
+		031FBD7829FA852E00B92181 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031FBD7729FA852E00B92181 /* AudioPlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		0314441429F9AAEA0092FE85 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		0314441629F9AB050092FE85 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		031FBD7529F9F96300B92181 /* CircleGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleGroupView.swift; sourceTree = "<group>"; };
+		031FBD7729FA852E00B92181 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 		031443FF29F9A60C0092FE85 /* RestartApp */ = {
 			isa = PBXGroup;
 			children = (
+				031FBD7929FA853C00B92181 /* Utilities */,
 				0314441329F9A9CE0092FE85 /* Info.plist */,
 				0314441229F9A8590092FE85 /* Views */,
 				0314440029F9A60C0092FE85 /* RestartAppApp.swift */,
@@ -95,6 +98,14 @@
 				031FBD7529F9F96300B92181 /* CircleGroupView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		031FBD7929FA853C00B92181 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				031FBD7729FA852E00B92181 /* AudioPlayer.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -173,6 +184,7 @@
 				0314441729F9AB050092FE85 /* HomeView.swift in Sources */,
 				0314440329F9A60C0092FE85 /* ContentView.swift in Sources */,
 				0314440129F9A60C0092FE85 /* RestartAppApp.swift in Sources */,
+				031FBD7829FA852E00B92181 /* AudioPlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

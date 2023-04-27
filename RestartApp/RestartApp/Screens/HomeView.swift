@@ -33,6 +33,7 @@ struct HomeView: View {
             
             Button {
                 self.isOnboardingActive = true
+                playSound(sound: "Sounds/chimeup", type: "mp3")
             } label: {
                 HStack{
                     Image(systemName: "arrow.triangle.2.circlepath.circle.fill").imageScale(.large)

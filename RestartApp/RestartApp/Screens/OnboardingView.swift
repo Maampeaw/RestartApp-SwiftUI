@@ -13,6 +13,10 @@ struct OnboardingView: View {
     @State private var buttonOffset: CGFloat = 0
     @State private var dynamicButtonWidth: CGFloat = 80
     @State private var isAnimating: Bool = false
+    @State private var imageOffset: CGSize = .zero
+    @State private var performAnimation: Bool = false
+    @State private var indicatorOpacity: Double = 1
+    @State private var textTitle: String = "Share"
     
     var body: some View {
         ZStack {
@@ -21,7 +25,11 @@ struct OnboardingView: View {
                 //Header
                 Spacer()
                 VStack (spacing: 0){
-                    Text("Share").font(.system(size: 60)).fontWeight(.heavy).foregroundColor(.white)
+                    Text(textTitle
+                    ).font(.system(size: 60)).fontWeight(.heavy)
+                     .foregroundColor(.white)
+                     .transition(.opacity)
+                     .id(textTitle)
                     Text("It's not how much we give but about how much love we put into giving").font(.title3).fontWeight(.light).foregroundColor(.white).multilineTextAlignment(.center).padding(.horizontal)
                 }.opacity(isAnimating ? 1 : 0)
                  .offset(x: isAnimating ? 0 : -40)
@@ -30,12 +38,48 @@ struct OnboardingView: View {
                 //Center
                 ZStack{
                     CircleGroupView(shapeColor: .white, shapeOpacity: 0.2)
+                        .offset(x: imageOffset.width * -1)
+                        .blur(radius: abs(imageOffset.width) / 5)
+                        .animation(.easeOut(duration: 1), value: imageOffset)
                     Image("character-1")
                     .resizable()
                     .scaledToFit()
                     .opacity(isAnimating ? 1 : 0)
                     .animation(.easeOut(duration: 0.5), value: isAnimating)
-                }
+                    .offset(x: (imageOffset.width * 1.2) , y: 0)
+                    .rotationEffect(.degrees(Double(imageOffset.width / 20 )))
+                    .gesture(
+                        DragGesture()
+                            .onChanged({ gesture in
+                              
+                                if abs(imageOffset.width) <= 150{
+                                    imageOffset = gesture.translation
+                                    withAnimation((.linear(duration: 0.25))){
+                                        indicatorOpacity = 0
+                                        textTitle = "Give"
+                                    }
+                                }
+                            })
+                            .onEnded({ gesture in
+                                imageOffset = .zero
+                                withAnimation((.linear(duration: 0.25))){
+                                    indicatorOpacity = 1
+                                    textTitle = "Share"
+                                }
+                              
+                            })
+                            
+                    )
+                    .animation(.easeOut(duration: 1), value: imageOffset)
+                }.overlay (
+                    Image(systemName: "arrow.left.and.right.circle")
+                        .font(.system(size: 44, weight: .ultraLight))
+                        .foregroundColor(.white)
+                        .offset(y: 20)
+                        .opacity(isAnimating ? indicatorOpacity : 0)
+                        .animation(.easeOut(duration: 1).delay(2), value: isAnimating)
+                    , alignment: .bottom)
+                
                 Spacer()
                 ZStack{
                     //1. Background
@@ -78,12 +122,13 @@ struct OnboardingView: View {
                                     if gesture.translation.width > 0 && buttonOffset <= buttonWidth - 80 {
                                         buttonOffset = gesture.translation.width
                                         dynamicButtonWidth = 80 + gesture.translation.width
-                                        
+                                       
                                     }
                                 }).onEnded({ _ in
                                     withAnimation(Animation.easeOut(duration: 0.5)){
                                         if buttonOffset > buttonWidth / 2{
                                             isOnboardingActive = false
+                                            playSound(sound: "Sounds/success", type: "m4a")
                                         }else{
                                             buttonOffset = 0
                                             dynamicButtonWidth = 80
@@ -106,6 +151,7 @@ struct OnboardingView: View {
         }.onAppear {
             isAnimating = true
         }//End of ZStack
+        .preferredColorScheme(.dark)
     }
 }
 
